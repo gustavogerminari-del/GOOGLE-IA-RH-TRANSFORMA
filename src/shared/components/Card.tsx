@@ -1,15 +1,18 @@
 import React from 'react';
 
-export interface CardProps {
+export interface CardProps extends Omit<React.HTMLAttributes<HTMLDivElement>, 'children'> {
   children: React.ReactNode;
   className?: string;
   padding?: 'none' | 'sm' | 'md' | 'lg';
+  hoverable?: boolean;
 }
 
 export const Card: React.FC<CardProps> = ({
   children,
   className = '',
   padding = 'md',
+  hoverable = false,
+  ...divProps
 }) => {
   const paddingStyles = {
     none: 'p-0',
@@ -18,8 +21,15 @@ export const Card: React.FC<CardProps> = ({
     lg: 'p-6 sm:p-8',
   };
 
+  const interactiveStyles = hoverable
+    ? 'transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md cursor-pointer'
+    : '';
+
   return (
-    <div className={`bg-white rounded-2xl border border-[#D5DEE8] shadow-xs ${paddingStyles[padding]} ${className}`}>
+    <div
+      {...divProps}
+      className={`bg-white rounded-2xl border border-[#D5DEE8] shadow-xs ${paddingStyles[padding]} ${interactiveStyles} ${className}`}
+    >
       {children}
     </div>
   );
