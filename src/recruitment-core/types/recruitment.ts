@@ -1,4 +1,11 @@
-export type OrigemProcesso = 'recrutamento_interno' | 'headhunter' | 'HEADHUNTER' | 'RH_INTERNO';
+export type OrigemProcesso =
+  | 'recrutamento_interno'
+  | 'interno'
+  | 'vaga_interna'
+  | 'recrutamento_cliente'
+  | 'headhunter'
+  | 'HEADHUNTER'
+  | 'RH_INTERNO';
 
 export type JobStatus = 
   | 'Aberta' 
@@ -45,7 +52,7 @@ export interface UnifiedJob {
   id: string;
   empresaId: string;
   companyId?: string;
-  origemProcesso: OrigemProcesso | 'vaga_interna' | 'recrutamento_cliente' | 'headhunter';
+  origemProcesso: OrigemProcesso;
   moduloOrigem?: string;
   origem?: string;
   tipoProcesso?: string;
@@ -57,11 +64,14 @@ export interface UnifiedJob {
   // Cliente (Headhunter)
   clienteId?: string;
   clienteNome?: string;
+  nomeEmpresa?: string;
+  companyName?: string;
   
   // Dados do Cargo / Vaga
   titulo: string;
   title?: string;
   cargo?: string;
+  codigoVaga?: string;
   descricao: string;
   description?: string;
   requisitos: string[];
@@ -80,6 +90,7 @@ export interface UnifiedJob {
   quantidadeVagas: number;
   openings?: number;
   applicantsCount?: number;
+  candidatosCount?: number;
   status: JobStatus;
   publicada?: boolean;
   
@@ -87,7 +98,9 @@ export interface UnifiedJob {
   responsavelId?: string;
   recruiterName?: string;
   consultorResponsavel?: string;
-  department?: string; // Departamento interno
+  recrutadorResponsavel?: string;
+  department?: string;
+  departamento?: string;
   gestorRequisitante?: string;
   centroCusto?: string;
 
@@ -107,6 +120,7 @@ export interface UnifiedJob {
   comissaoCalculada?: number;
   receitaPrevista?: number;
   slaDias?: number;
+  prazoSla?: number;
   dataPrevista?: string;
   contratoAtivo?: boolean;
   garantiaDias?: number;
@@ -127,6 +141,10 @@ export interface UnifiedJob {
 export interface UnifiedCandidate {
   id: string;
   empresaId: string;
+  companyId?: string;
+  candidatoId?: string;
+  jobId?: string;
+  origemProcesso?: OrigemProcesso;
   nome: string;
   name?: string;
   email: string;
@@ -135,6 +153,7 @@ export interface UnifiedCandidate {
   fotoUrl?: string;
   avatar?: string;
   cidade?: string;
+  estado?: string;
   location?: string;
   cargoAtual: string;
   role?: string;
@@ -149,10 +168,10 @@ export interface UnifiedCandidate {
   competencias: string[];
   skills?: string[];
   status: 'Ativo' | 'Em Processo' | 'Contratado' | 'Indisponível';
-  rating?: number; // 1 to 5
+  rating?: number;
   notes?: string;
   appliedDate?: string;
-  source?: 'LinkedIn' | 'Indicação' | 'Site Institucional' | 'Gupy' | 'Headhunter' | 'Outro';
+  source?: 'LinkedIn' | 'Indicação' | 'Site Institucional' | 'Gupy' | 'Headhunter' | 'Outro' | string;
   origem?: 'Portal' | 'Busca Ativa' | 'LinkedIn' | 'Indicação' | 'Importação' | string;
   curriculoUrl?: string;
   resumeUrl?: string;
@@ -160,6 +179,8 @@ export interface UnifiedCandidate {
   compatibilidadePercent?: number;
   matchIaPercent?: number;
   escolaridade?: string;
+  etapaAtual?: ProcessStage;
+  dataCandidatura?: string;
   anotacoes?: Array<{ id: string; autor: string; data: string; texto: string }>;
   documentos?: Array<{ id: string; nome: string; tipo: string; url: string; dataUpload: string; status: 'Pendente' | 'Verificado' | 'Rejeitado' }>;
   
@@ -182,6 +203,7 @@ export interface UnifiedCandidate {
 export interface UnifiedCandidateProcess {
   id: string;
   empresaId: string;
+  companyId?: string;
   candidatoId: string;
   vagaId: string;
   clienteId?: string;
@@ -205,6 +227,7 @@ export interface UnifiedCandidateProcess {
 export interface UnifiedInterview {
   id: string;
   empresaId?: string;
+  companyId?: string;
   origemProcesso: OrigemProcesso;
   candidatoId: string;
   candidatoNome: string;
@@ -234,6 +257,7 @@ export interface UnifiedInterview {
 export interface UnifiedAgendaEvent {
   id: string;
   empresaId: string;
+  companyId?: string;
   origemProcesso: OrigemProcesso;
   tipoEvento: 'Reunião' | 'Entrevista' | 'Visita' | 'Follow-up' | 'Pendência' | 'Retorno' | 'Ligação' | 'SLA / Prazo' | 'Garantia';
   titulo: string;
@@ -252,6 +276,7 @@ export interface UnifiedAgendaEvent {
 export interface UnifiedHiring {
   id: string;
   empresaId: string;
+  companyId?: string;
   origemProcesso: OrigemProcesso;
   candidatoId: string;
   candidatoNome: string;
