@@ -3,7 +3,7 @@
  * Depende exclusivamente do Módulo NÚCLEO, COMPARTILHADO, AUTENTICAÇÃO e DASHBOARD.
  */
 
-export type JobStatus = 'Aberta' | 'Pausada' | 'Fechada' | 'Arquivada' | 'Rascunho' | 'Em andamento' | 'Concluída' | 'Cancelada';
+export type JobStatus = 'Aberta' | 'Pausada' | 'Fechada' | 'Arquivada' | 'Rascunho' | 'Em andamento' | 'Em Andamento' | 'Concluída' | 'Cancelada';
 export type JobType = 'CLT' | 'PJ' | 'Estágio' | 'Temporário' | 'Executive';
 export type JobLocationType = 'Presencial' | 'Remoto' | 'Híbrido';
 
@@ -19,6 +19,7 @@ export interface Job {
   empresaId?: string;
   companyId?: string;
   nomeEmpresa?: string;
+  companyName?: string;
   titulo?: string;
   title: string;
   descricao?: string;
