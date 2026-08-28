@@ -9,8 +9,10 @@
   "scripts": {
     "dev": "vite --host 0.0.0.0 --port 3000",
     "build": "vite build",
-    "lint": "vite build",
-    "test": "vite build",
+    "typecheck": "tsc --noEmit",
+    "check": "npm run typecheck && npm run build",
+    "lint": "npm run typecheck",
+    "test": "npm run check",
     "preview": "vite preview --host 0.0.0.0 --port 3000"
   },
   "dependencies": {
