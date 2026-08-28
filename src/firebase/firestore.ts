@@ -1,0 +1,28 @@
+export {
+  getFirestore,
+  collection,
+  doc,
+  query,
+  where,
+  limit,
+  orderBy,
+  getDoc,
+  getDocFromServer,
+  getDocs,
+  setDoc,
+  updateDoc,
+  deleteDoc,
+  addDoc,
+  writeBatch,
+  onSnapshot,
+  serverTimestamp,
+  deleteField,
+} from 'firebase/firestore';
+export type {
+  Firestore,
+  CollectionReference,
+  DocumentReference,
+  Query,
+  DocumentSnapshot,
+  QuerySnapshot,
+} from 'firebase/firestore';

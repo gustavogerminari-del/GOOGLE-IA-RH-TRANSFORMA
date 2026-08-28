@@ -1,0 +1,8 @@
+node_modules/
+dist/
+.dev.vars
+.env
+.env.*
+!.env.example
+.DS_Store
+app/api/master/developer-assistant/sourceCatalog.generated.ts
