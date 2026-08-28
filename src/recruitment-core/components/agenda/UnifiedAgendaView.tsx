@@ -22,7 +22,7 @@ import {
 interface UnifiedAgendaViewProps {
   events: UnifiedAgendaEvent[];
   origemProcesso: OrigemProcesso;
-  onAddEvent: (event: UnifiedAgendaEvent) => void;
+  onAddEvent?: (event: UnifiedAgendaEvent) => void;
 }
 
 export const UnifiedAgendaView: React.FC<UnifiedAgendaViewProps> = ({
@@ -75,7 +75,7 @@ export const UnifiedAgendaView: React.FC<UnifiedAgendaViewProps> = ({
       concluido: false
     };
 
-    onAddEvent(newEvent);
+    onAddEvent?.(newEvent);
     setShowModal(false);
   };
 
@@ -97,13 +97,15 @@ export const UnifiedAgendaView: React.FC<UnifiedAgendaViewProps> = ({
           </p>
         </div>
 
-        <button
-          onClick={() => setShowModal(true)}
-          className="px-4 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white font-extrabold text-xs rounded-xl shadow-2xs transition-all flex items-center gap-2 cursor-pointer shrink-0"
-        >
-          <Plus className="w-4 h-4" />
-          <span>+ Novo Compromisso</span>
-        </button>
+        {onAddEvent && (
+          <button
+            onClick={() => setShowModal(true)}
+            className="px-4 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white font-extrabold text-xs rounded-xl shadow-2xs transition-all flex items-center gap-2 cursor-pointer shrink-0"
+          >
+            <Plus className="w-4 h-4" />
+            <span>+ Novo Compromisso</span>
+          </button>
+        )}
       </div>
 
       {/* Toolbar */}
@@ -181,7 +183,7 @@ export const UnifiedAgendaView: React.FC<UnifiedAgendaViewProps> = ({
       </div>
 
       {/* New Event Modal */}
-      {showModal && (
+      {showModal && onAddEvent && (
         <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-xs z-50 flex items-center justify-center p-4">
           <div className="bg-white w-full max-w-lg rounded-2xl shadow-2xl border border-slate-200 p-6 space-y-4">
             <div className="flex items-center justify-between border-b border-slate-100 pb-3">
