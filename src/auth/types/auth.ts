@@ -61,6 +61,8 @@ export type SystemActionKey =
 
 export interface UserProfile {
   id: string;
+  /** Alias do Firebase Auth UID. Mantido para compatibilidade com telas técnicas. */
+  uid?: string;
   name: string;
   email: string;
   role: RoleProfile;
