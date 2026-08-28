@@ -228,7 +228,7 @@ export const JobsManagementView: React.FC<JobsManagementViewProps> = ({
             Voltar para Vagas
           </Button>
         </div>
-        <JobCandidatesManagementView jobId={selectedJobForCandidates.id} jobTitle={selectedJobForCandidates.title} />
+        <JobCandidatesManagementView job={selectedJobForCandidates} />
       </div>
     );
   }

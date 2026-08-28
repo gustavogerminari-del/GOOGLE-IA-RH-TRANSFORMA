@@ -663,6 +663,9 @@ export const OfficialAdmissaoFlowModal: React.FC<OfficialAdmissaoFlowModalProps>
         bancoAgencia: `${formData.dadosBancarios?.banco} | Ag ${formData.dadosBancarios?.agencia} | C/C ${formData.dadosBancarios?.conta}`,
         rg: formData.rg
       });
+      const efetivadoId = efetivado && typeof efetivado === 'object' && 'id' in efetivado
+        ? String((efetivado as { id?: unknown }).id || '')
+        : '';
 
       // 3. Criar acesso é uma etapa posterior e independente da efetivação.
       // A senha provisoria nunca e persistida em texto no Firestore.
@@ -681,12 +684,12 @@ export const OfficialAdmissaoFlowModal: React.FC<OfficialAdmissaoFlowModalProps>
             companyId,
             role: acessoConfig.perfil || 'Colaborador',
             tipoUsuario: 'FUNCIONARIO',
-            colaboradorId: efetivado?.id || (formData as any).colaboradorId || (formData as any).colaboradorIdCriado,
+            colaboradorId: efetivadoId || (formData as any).colaboradorId || (formData as any).colaboradorIdCriado,
             status: 'Ativo',
             permissions: acessoConfig.modulosHabilitados || [],
             allowClientSideFallback: false,
           });
-          const colaboradorId = efetivado?.id || (formData as any).colaboradorId || (formData as any).colaboradorIdCriado;
+          const colaboradorId = efetivadoId || (formData as any).colaboradorId || (formData as any).colaboradorIdCriado;
           if (colaboradorId) {
             await markColaboradorAccessCreatedFirestore(colaboradorId, companyId, emailAccess);
           }
@@ -712,7 +715,7 @@ export const OfficialAdmissaoFlowModal: React.FC<OfficialAdmissaoFlowModalProps>
       console.info('[ADMISSAO_FINALIZE_SUCCESS]', {
         admissaoId: finalAdmission.id,
         candidatoId: finalAdmission.candidatoId || null,
-        colaboradorId: efetivado?.id || (finalAdmission as any).colaboradorIdCriado || null,
+        colaboradorId: efetivadoId || (finalAdmission as any).colaboradorIdCriado || null,
         empresaId: companyId,
       });
       const successMessage = accessPending

@@ -140,7 +140,8 @@ export const SubscriptionsView: React.FC = () => {
         documentosAssinatura: true,
         auditoriaLogs: newSub.modulesEnabled.auditoriaLogs,
         relatoriosAvancados: true,
-        siteVagasPersonalizado: true
+        siteVagasPersonalizado: true,
+        implantacaoMigracao: true
       },
       branding: {
         primaryColor: '#4F46E5',

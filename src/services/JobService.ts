@@ -363,7 +363,7 @@ export class JobService {
         successfulQueries += 1;
         snap.forEach(d => {
           if (!listMap.has(d.id)) {
-            listMap.set(d.id, normalizeJobData({ ...d.data(), id: d.id }));
+            listMap.set(d.id, normalizeJobData({ ...(d.data() as Record<string, unknown>), id: d.id }));
           }
         });
       } catch (error) {

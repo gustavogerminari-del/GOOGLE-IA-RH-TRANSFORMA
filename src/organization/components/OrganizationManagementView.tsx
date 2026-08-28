@@ -43,16 +43,12 @@ export const OrganizationManagementView: React.FC<OrganizationManagementViewProp
     initialCompany || {
       id: user?.empresaId || 'emp-default',
       name: 'Sua Empresa',
-      legalName: 'Razão Social',
+      tradingName: 'Sua Empresa',
       cnpj: '00.000.000/0001-00',
-      industry: 'Tecnologia',
-      headquarters: 'Brasil',
-      website: '',
-      employeeCountTotal: 0,
-      activeDepartmentsCount: 0,
-      totalMonthlyBudget: 0,
-      currency: 'BRL',
-      updatedAt: new Date().toISOString()
+      isVerified: false,
+      address: { street: '', number: '', neighborhood: '', city: '', state: '', zipCode: '' },
+      contact: { email: user?.email || '', phone: '', website: '' },
+      industryCategory: 'Não informado'
     }
   );
 

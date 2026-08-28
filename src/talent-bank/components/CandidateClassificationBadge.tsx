@@ -13,6 +13,7 @@ export const CandidateClassificationBadge: React.FC<CandidateClassificationBadge
   const stylesMap: Record<CandidateClassification, string> = {
     'Recomendado': 'bg-emerald-50 text-emerald-800 border-emerald-200',
     'Alto Potencial': 'bg-indigo-50 text-indigo-800 border-indigo-200',
+    'Alto potencial': 'bg-indigo-50 text-indigo-800 border-indigo-200',
     'Pendente': 'bg-amber-50 text-amber-800 border-amber-200',
     'Arquivado': 'bg-slate-100 text-slate-700 border-slate-200',
   };
@@ -45,6 +46,7 @@ export const CandidateStatusBadge: React.FC<CandidateStatusBadgeProps> = ({ stat
     'Contratado': 'bg-emerald-50 text-emerald-700 border-emerald-200',
     'Banco de Reserva': 'bg-indigo-50 text-indigo-700 border-indigo-200',
     'Desqualificado': 'bg-rose-50 text-rose-700 border-rose-200',
+    'Indisponível': 'bg-slate-100 text-slate-600 border-slate-200',
   };
 
   return (

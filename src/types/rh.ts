@@ -2,7 +2,7 @@ export type JobStatus = 'Aberta' | 'Pausada' | 'Fechada' | 'Arquivada' | 'Rascun
 export type JobType = 'CLT' | 'PJ' | 'Estágio' | 'Temporário' | 'Executive';
 export type JobLocationType = 'Presencial' | 'Remoto' | 'Híbrido';
 
-export type StageId = 'inscritos' | 'triagem' | 'entrevista_rh' | 'teste_tecnico' | 'entrevista_gestor' | 'proposta' | 'contratado';
+export type StageId = 'inscritos' | 'triagem' | 'entrevista_rh' | 'teste_tecnico' | 'entrevista_gestor' | 'proposta' | 'contratado' | 'banco-talentos';
 
 export interface Stage {
   id: StageId;

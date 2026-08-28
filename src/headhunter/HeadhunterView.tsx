@@ -63,7 +63,8 @@ export type HeadhunterSubTab =
   | 'contratos'
   | 'relatorios'
   | 'portal_cliente'
-  | 'apresentacoes';
+  | 'apresentacoes'
+  | 'projetos';
 
 interface HeadhunterViewProps {
   initialSubTab?: HeadhunterSubTab;
@@ -414,7 +415,7 @@ export const HeadhunterView: React.FC<HeadhunterViewProps> = ({ initialSubTab = 
         {activeTab === 'pipeline' && (
           <UnifiedPipelineView
             origemProcesso="headhunter"
-            job={jobs[0] || { id: 'vaga-0', titulo: 'Vaga Selecionada', origemProcesso: 'headhunter' }}
+            job={jobs[0] || ({ id: 'vaga-0', titulo: 'Vaga Selecionada', origemProcesso: 'headhunter' } as UnifiedJob)}
             candidates={candidates}
             onBack={() => setActiveTab('vagas')}
             onOpenAiModal={handleOpenAiModal}

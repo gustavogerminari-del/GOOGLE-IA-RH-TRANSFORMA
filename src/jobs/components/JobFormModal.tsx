@@ -25,6 +25,10 @@ export interface HeadhunterClientOption {
   cnpj?: string;
   companyId?: string;
   empresaId?: string;
+  comissaoNegociadaPercent?: number;
+  valorPadraoVaga?: number;
+  prazoPagamentoDias?: number;
+  formaCobranca?: string;
 }
 
 export interface JobFormModalProps {

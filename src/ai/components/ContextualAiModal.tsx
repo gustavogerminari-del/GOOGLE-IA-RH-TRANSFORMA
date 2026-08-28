@@ -6,7 +6,9 @@ interface ContextualAiModalProps {
   onClose: () => void;
   title: string;
   subtitle?: string;
-  onExecute: () => Promise<any>;
+  onExecute?: () => Promise<any>;
+  getAnalysis?: () => Promise<any>;
+  contextType?: string;
   onApply?: (data: any) => void;
   confirmText?: string;
 }
@@ -17,6 +19,7 @@ export const ContextualAiModal: React.FC<ContextualAiModalProps> = ({
   title,
   subtitle = 'Análise inteligente gerada com base nos dados selecionados',
   onExecute,
+  getAnalysis,
   onApply,
   confirmText = 'Aplicar no Sistema',
 }) => {
@@ -40,7 +43,9 @@ export const ContextualAiModal: React.FC<ContextualAiModalProps> = ({
     setLoading(true);
     setError(null);
     try {
-      const res = await onExecute();
+      const executor = onExecute || getAnalysis;
+      if (!executor) throw new Error('Nenhuma função de análise foi informada.');
+      const res = await executor();
       setResult(res);
 
       if (typeof res === 'string') {

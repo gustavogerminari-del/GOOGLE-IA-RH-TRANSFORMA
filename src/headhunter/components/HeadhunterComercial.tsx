@@ -261,7 +261,7 @@ export const HeadhunterComercial: React.FC<HeadhunterComercialProps> = ({
       {activeSubTab === 'oportunidades' && (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
           {OPPORTUNITY_STAGES.map(stage => {
-            const stageLeads = leads.filter(l => l.etapa === stage || (stage === 'Novo lead' && (!l.etapa || l.etapa === 'Lead')));
+            const stageLeads = leads.filter(l => l.etapa === stage || (stage === 'Novo lead' && !l.etapa));
             return (
               <div key={stage} className="bg-slate-50/80 p-3.5 rounded-2xl border border-slate-200/80 flex flex-col space-y-3">
                 <div className="flex items-center justify-between px-1">

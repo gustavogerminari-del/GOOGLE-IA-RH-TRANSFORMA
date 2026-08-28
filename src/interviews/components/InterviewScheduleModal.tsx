@@ -51,7 +51,7 @@ export const InterviewScheduleModal: React.FC<InterviewScheduleModalProps> = ({
   const [durationMinutes, setDurationMinutes] = useState<number>(45);
   const [type, setType] = useState<InterviewType>('Online (Google Meet)');
   const [locationUrl, setLocationUrl] = useState('https://meet.google.com/rh-session-demo');
-  const [stageName, setStageName] = useState(INTERVIEW_STAGE_OPTIONS[1]);
+  const [stageName, setStageName] = useState<string>(INTERVIEW_STAGE_OPTIONS[1]);
   const [notes, setNotes] = useState('');
   const [sendReminderEmail, setSendReminderEmail] = useState(true);
 

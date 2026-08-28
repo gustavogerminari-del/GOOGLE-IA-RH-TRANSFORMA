@@ -852,7 +852,7 @@ export const JobCandidatesManagementView: React.FC<JobCandidatesManagementViewPr
                     const percentage = Math.min(100, Math.round((hiredCount / positions) * 100));
                     const statusInfo = getJobStatusBadge(j);
 
-                    const novosCount = cands.filter(c => c.status === 'Novos' || c.status === 'Novo').length;
+                    const novosCount = cands.filter(c => c.status === 'Novos' || c.status === 'Novos').length;
                     const triagemCount = cands.filter(c => ['Triagem IA', 'Em Análise', 'Em Análise RH', 'Triagem', 'Análise'].includes(c.status)).length;
                     const entrevistaCount = cands.filter(c => ['Entrevista', 'Entrevista Agendada', 'Entrevista Realizada', 'Entrevistas'].includes(c.status)).length;
 

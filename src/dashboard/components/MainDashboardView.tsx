@@ -57,6 +57,7 @@ export const MainDashboardView: React.FC<MainDashboardViewProps> = ({
     monthlyHiresTarget: 10,
     avgTimeToHireDays: 0,
     slaTargetDays: 30,
+    offerAcceptanceRate: 0,
   });
   const [departments, setDepartments] = useState<any[]>([]);
   const [responsibles, setResponsibles] = useState<any[]>([]);
@@ -125,6 +126,7 @@ export const MainDashboardView: React.FC<MainDashboardViewProps> = ({
         monthlyHiresTarget: activeJobs.length * 2 || 10,
         avgTimeToHireDays: 18,
         slaTargetDays: 30,
+        offerAcceptanceRate: proposta > 0 ? Math.min(100, Math.round((candidates.filter(c => String((c as any).status || '').toLowerCase() === 'contratado').length / proposta) * 100)) : 0,
       });
 
       // Group by department
@@ -213,7 +215,7 @@ export const MainDashboardView: React.FC<MainDashboardViewProps> = ({
         {showVagas && (
           <MetricCard
             title="Vagas Abertas"
-            value={metrics.totalOpenJobs}
+            value={metrics.activeJobsCount}
             subtitle="Processos ativos"
             icon={<Briefcase className="w-5 h-5 text-[#2563EB]" />}
             accentColor="blue"
@@ -226,7 +228,7 @@ export const MainDashboardView: React.FC<MainDashboardViewProps> = ({
         {showTalentos && (
           <MetricCard
             title="Candidatos"
-            value={metrics.activeProcesses}
+            value={metrics.candidatesInProcessCount}
             subtitle="Cadastrados no funil"
             icon={<Users className="w-5 h-5 text-[#2563EB]" />}
             accentColor="blue"
@@ -239,7 +241,7 @@ export const MainDashboardView: React.FC<MainDashboardViewProps> = ({
         {showEntrevistas && (
           <MetricCard
             title="Entrevistas"
-            value={metrics.scheduledInterviews}
+            value={metrics.interviewsScheduledCount}
             subtitle="Agendadas na semana"
             icon={<Calendar className="w-5 h-5 text-[#2563EB]" />}
             accentColor="blue"
@@ -297,7 +299,7 @@ export const MainDashboardView: React.FC<MainDashboardViewProps> = ({
             <p className="text-[11px] uppercase tracking-wider font-extrabold text-[#64748B]">
               SLA Médio de Fechamento de Vagas
             </p>
-            <h4 className="text-2xl font-black text-[#1E293B]">{metrics.slaAvgDays} Dias</h4>
+            <h4 className="text-2xl font-black text-[#1E293B]">{metrics.avgTimeToHireDays} Dias</h4>
             <p className="text-xs text-[#64748B]">Meta corporativa: abaixo de 20 dias</p>
           </div>
           <div className="w-11 h-11 rounded-xl bg-blue-50 text-[#2563EB] flex items-center justify-center border border-blue-100">

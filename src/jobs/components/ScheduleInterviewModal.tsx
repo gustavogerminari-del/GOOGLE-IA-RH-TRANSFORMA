@@ -39,7 +39,7 @@ export const ScheduleInterviewModal: React.FC<ScheduleInterviewModalProps> = ({
       setLocation(initialData?.location || '');
       setMeetingLink(initialData?.meetingLink || '');
       setNotes(initialData?.notes || '');
-      setStatus(initialData?.status || (initialData?.date ? 'Reagendada' : 'Agendada'));
+      setStatus((initialData?.status as 'Agendada' | 'Reagendada' | 'Realizada' | 'Cancelada' | undefined) || (initialData?.date ? 'Reagendada' : 'Agendada'));
     }
   }, [isOpen, initialData]);
 

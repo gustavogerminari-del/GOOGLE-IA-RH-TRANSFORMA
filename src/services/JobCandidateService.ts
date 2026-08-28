@@ -116,6 +116,7 @@ export interface JobCandidateApplication {
   name: string;
   cpf?: string;
   photo?: string;
+  avatar?: string;
   email: string;
   phone: string;
   role: string;
@@ -544,7 +545,7 @@ export class JobCandidateService {
       resumeUrl: appData.resumeUrl || '',
       resumeKeywords: appData.resumeKeywords || [],
       compatibilityScore: Number(appData.compatibilityScore ?? 0),
-      compatibilityLevel: appData.compatibilityLevel || '',
+      compatibilityLevel: appData.compatibilityLevel || ((Number(appData.compatibilityScore ?? 0) >= 85) ? 'Muito compatível' : (Number(appData.compatibilityScore ?? 0) >= 65) ? 'Compatível' : 'Baixa compatibilidade'),
       objective: appData.objective || '',
       experiences: appData.experiences || [],
       educationDetails: appData.educationDetails || [],

@@ -298,7 +298,7 @@ export const HeadhunterCandidatos: React.FC<HeadhunterCandidatosProps> = ({
   };
 
   const handleConvertToOfficial = (cand: HeadhunterCandidate) => {
-    const updated = { 
+    const updated: HeadhunterCandidate = { 
       ...cand, 
       convertidoCandidatoOficial: true, 
       etapaPipeline: 'Triagem', 

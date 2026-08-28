@@ -22,7 +22,7 @@ export const DocumentosAssinaturaTab: React.FC<DocumentosAssinaturaTabProps> = (
   const [showPreviewModal, setShowPreviewModal] = useState(false);
 
   // Variable replacement helper
-  const renderDocumentText = (type: 'TRCT' | 'AVISO' | 'QUITACAO') => {
+  const renderDocumentText = (type: 'TRCT' | 'AVISO' | 'QUITACAO' | 'ASO') => {
     const nome = process.employeeName;
     const cpf = process.employeeCpf || '000.000.000-00';
     const cargo = process.employeeRole || 'Cargo N/A';
