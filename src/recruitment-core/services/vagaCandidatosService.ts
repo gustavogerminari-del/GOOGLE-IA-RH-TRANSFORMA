@@ -19,6 +19,7 @@ import { UnifiedCandidate, ProcessStage, UnifiedInterview } from '../types/recru
 export interface CandidaturaDoc {
   id: string; // `${vagaId}_${candidateId}` or auto ID
   empresaId: string;
+  companyId?: string;
   vagaId: string;
   candidateId: string;
   status: 'Inscrito' | 'Em Análise' | 'Entrevista' | 'Aprovado' | 'Contratado' | 'Reprovado' | 'Desistiu';
@@ -32,8 +33,8 @@ export interface CandidaturaDoc {
 
 export interface CandidateWithProcess extends UnifiedCandidate {
   candidaturaId?: string;
-  etapaAtual: ProcessStage;
-  dataCandidatura: string;
+  etapaAtual?: ProcessStage;
+  dataCandidatura?: string;
   dataAtualizacao?: string;
   origemCandidatura?: string;
   matchIaPercent?: number;
@@ -99,13 +100,19 @@ export class VagaCandidatosService {
           console.warn('Erro ao carregar perfil do candidato:', e);
         }
 
+        const rawStage = ['novo', 'novos'].includes(String(candData.etapa || candData.status || '').toLowerCase())
+          ? 'Inscrito'
+          : String(candData.etapa || candData.status || 'Inscrito');
+        const etapaAtual = rawStage as ProcessStage;
+
         const combined: CandidateWithProcess = {
           id: candidateId || docSnap.id,
           candidaturaId: docSnap.id,
           empresaId,
-          nome: candidateProfile?.nome || (candidateProfile as any)?.name || 'Candidato Sem Nome',
+          companyId: empresaId,
+          nome: candidateProfile?.nome || candidateProfile?.name || 'Candidato Sem Nome',
           email: candidateProfile?.email || '',
-          telefone: candidateProfile?.telefone || (candidateProfile as any)?.phone || '',
+          telefone: candidateProfile?.telefone || candidateProfile?.phone || '',
           fotoUrl: candidateProfile?.fotoUrl || candidateProfile?.avatar,
           cidade: candidateProfile?.cidade || candidateProfile?.location || 'Não informada',
           cargoAtual: candidateProfile?.cargoAtual || candidateProfile?.role || '',
@@ -115,12 +122,12 @@ export class VagaCandidatosService {
           pretensaoSalarial: candidateProfile?.pretensaoSalarial,
           competencias: candidateProfile?.competencias || [],
           status: candData.status === 'Contratado' ? 'Contratado' : candData.status === 'Reprovado' ? 'Indisponível' : 'Em Processo',
-          etapaAtual: ['novo', 'novos'].includes(String(candData.etapa || candData.status || '').toLowerCase()) ? 'Inscrito' : String(candData.etapa || candData.status || 'Inscrito'),
+          etapaAtual,
           dataCandidatura: candData.createdAt || new Date().toISOString(),
           matchIaPercent: Number(candData.matchIa ?? candidateProfile?.matchIaPercent ?? 0),
           triagemIaScore: Number(candData.matchIa ?? candidateProfile?.triagemIaScore ?? 0),
           triagemIaParecer: candData.triagemIaParecer || candidateProfile?.triagemIaParecer || '',
-          source: (candData.origem as any) || candidateProfile?.source || '',
+          source: candData.origem || candidateProfile?.source || '',
           curriculoUrl: candidateProfile?.curriculoUrl || candidateProfile?.resumeUrl,
           curriculoTexto: candidateProfile?.curriculoTexto,
           linhaDoTempo: candidateProfile?.linhaDoTempo || [
@@ -195,7 +202,7 @@ export class VagaCandidatosService {
     const docRef = doc(db, 'candidaturas', candidaturaId);
     const current = await getDoc(docRef);
     if (!current.exists()) throw new Error('Candidatura não encontrada.');
-    const data = current.data() as CandidaturaDoc & { companyId?: string };
+    const data = current.data() as CandidaturaDoc;
     const tenant = String(data.empresaId || data.companyId || '').trim();
     if (!tenant || tenant !== empresaId) throw new Error('Candidatura não pertence à empresa informada.');
     if (String(data.candidateId || '') !== String(candidateId)) throw new Error('Candidato não corresponde à candidatura informada.');
