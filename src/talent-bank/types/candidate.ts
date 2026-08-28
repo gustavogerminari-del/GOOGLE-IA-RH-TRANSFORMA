@@ -3,9 +3,9 @@
  * Depende exclusivamente do Módulo NÚCLEO, COMPARTILHADO, AUTENTICAÇÃO e GESTÃO DE VAGAS.
  */
 
-export type CandidateClassification = 'Recomendado' | 'Alto Potencial' | 'Pendente' | 'Arquivado';
-export type CandidateStatus = 'Ativo' | 'Em Processo' | 'Contratado' | 'Banco de Reserva' | 'Desqualificado';
-export type AvailabilityType = 'Imediata' | '15 dias' | '30 dias' | 'A combinar';
+export type CandidateClassification = 'Recomendado' | 'Alto Potencial' | 'Alto potencial' | 'Pendente' | 'Arquivado';
+export type CandidateStatus = 'Ativo' | 'Em Processo' | 'Contratado' | 'Banco de Reserva' | 'Desqualificado' | 'Indisponível';
+export type AvailabilityType = 'Imediata' | '15 dias' | '30 dias' | 'A combinar' | string;
 
 export interface WorkExperience {
   company: string;
@@ -36,14 +36,15 @@ export interface Candidate {
   email: string;
   phone: string;
   role: string;
-  departmentArea: string;
+  departmentArea?: string;
   location: string;
   avatar: string;
   experienceYears: number;
-  salaryExpectation: string;
-  availability: AvailabilityType;
+  experienceSummary?: string;
+  salaryExpectation?: string;
+  availability?: AvailabilityType;
   status: CandidateStatus;
-  classification: CandidateClassification;
+  classification?: CandidateClassification;
   skills: string[];
   workHistory?: WorkExperience[];
   educationHistory?: EducationInfo[];
@@ -51,7 +52,7 @@ export interface Candidate {
   currentJobId?: string;
   notes: string;
   source: string;
-  createdAt: string;
+  createdAt?: string;
   updatedAt?: string;
 }
 
