@@ -17,7 +17,11 @@ export interface GoogleWorkspaceIntegrationStatus {
 
 const authenticatedRequest = async (url: string, init: RequestInit = {}) => {
   const currentUser = auth.currentUser;
-  if (!currentUser) throw new Error('Sessão Firebase obrigatória.');
+  if (!currentUser) {
+    const error: any = new Error('Sua sessão no RH TRANSFORMA expirou. Entre novamente para continuar.');
+    error.code = 'RH_SESSION_REQUIRED';
+    throw error;
+  }
   const token = await currentUser.getIdToken();
   const response = await fetch(url, {
     ...init,
@@ -125,4 +129,3 @@ export class GoogleWorkspaceService {
     });
   }
 }
-
