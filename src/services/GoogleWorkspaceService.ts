@@ -1,4 +1,4 @@
-import { auth } from '../lib/firebase';
+import { isSupabaseConfigured, supabase, supabaseFunctionsUrl } from '../lib/supabase';
 import { Interview, InterviewScheduleInput } from '../types/rh';
 
 export interface GoogleWorkspaceIntegrationStatus {
@@ -15,14 +15,18 @@ export interface GoogleWorkspaceIntegrationStatus {
   meetAvailable?: boolean;
 }
 
+const sessionError = () => {
+  const error: any = new Error('Sua sessão no RH TRANSFORMA expirou. Entre novamente para continuar.');
+  error.code = 'RH_SESSION_REQUIRED';
+  return error;
+};
+
 const authenticatedRequest = async (url: string, init: RequestInit = {}) => {
-  const currentUser = auth.currentUser;
-  if (!currentUser) {
-    const error: any = new Error('Sua sessão no RH TRANSFORMA expirou. Entre novamente para continuar.');
-    error.code = 'RH_SESSION_REQUIRED';
-    throw error;
-  }
-  const token = await currentUser.getIdToken();
+  if (!isSupabaseConfigured || !supabase) throw sessionError();
+  const { data, error: authError } = await supabase.auth.getSession();
+  const token = data.session?.access_token;
+  if (authError || !token) throw sessionError();
+
   const response = await fetch(url, {
     ...init,
     headers: {
@@ -44,9 +48,18 @@ const authenticatedRequest = async (url: string, init: RequestInit = {}) => {
   return payload;
 };
 
+const workspaceUrl = () => `${supabaseFunctionsUrl}/google-workspace`;
+
 export class GoogleWorkspaceService {
   static async getStatus(companyId: string) {
-    return authenticatedRequest(`/api/google/workspace?companyId=${encodeURIComponent(companyId)}`) as Promise<{
+    if (!isSupabaseConfigured || !supabaseFunctionsUrl) {
+      return {
+        success: true as const,
+        integration: { companyId, empresaId: companyId, status: 'disconnected' } as GoogleWorkspaceIntegrationStatus,
+        configuration: { oauthConfigured: false, secureStoreConfigured: false },
+      };
+    }
+    return authenticatedRequest(`${workspaceUrl()}?companyId=${encodeURIComponent(companyId)}`) as Promise<{
       success: true;
       integration: GoogleWorkspaceIntegrationStatus;
       configuration: { oauthConfigured: boolean; secureStoreConfigured: boolean };
@@ -54,28 +67,35 @@ export class GoogleWorkspaceService {
   }
 
   static async connect(companyId: string, reconnect = false) {
-    const result = await authenticatedRequest('/api/google/workspace', {
+    const result = await authenticatedRequest(workspaceUrl(), {
       method: 'POST',
-      body: JSON.stringify({ companyId, action: reconnect ? 'reconnect' : 'connect' }),
+      body: JSON.stringify({
+        companyId,
+        empresaId: companyId,
+        action: reconnect ? 'reconnect' : 'connect',
+        returnUrl: `${window.location.origin}${window.location.pathname}`,
+      }),
     });
     if (!result.authorizationUrl) throw new Error('Google não retornou a página de autorização.');
     window.location.assign(result.authorizationUrl);
   }
 
   static async test(companyId: string) {
-    return authenticatedRequest('/api/google/workspace', {
+    return authenticatedRequest(workspaceUrl(), {
       method: 'POST',
-      body: JSON.stringify({ companyId, action: 'test' }),
+      body: JSON.stringify({ companyId, empresaId: companyId, action: 'test' }),
     });
   }
 
   static async disconnect(companyId: string) {
-    return authenticatedRequest('/api/google/workspace', {
+    return authenticatedRequest(workspaceUrl(), {
       method: 'DELETE',
-      body: JSON.stringify({ companyId }),
+      body: JSON.stringify({ companyId, empresaId: companyId, action: 'disconnect' }),
     });
   }
 
+  // Os fluxos abaixo continuam apontando para as APIs funcionais específicas de entrevistas,
+  // mas agora usam a sessão Supabase do RH TRANSFORMA em vez de token Firebase.
   static async createInterview(companyId: string, input: InterviewScheduleInput): Promise<{ interview: Interview; warnings: string[]; message: string }> {
     return authenticatedRequest('/api/google/interviews', {
       method: 'POST',
