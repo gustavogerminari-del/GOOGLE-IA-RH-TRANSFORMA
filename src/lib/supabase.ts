@@ -1,9 +1,26 @@
-/**
- * Compatibilidade de UI da antiga opção Supabase.
- * RH-MIL 3.0 usa Firebase Workers + Firestore + Storage; Supabase não faz parte do runtime.
- */
-export const isSupabaseConfigured = false;
-export const supabase = null;
+import { createClient } from '@supabase/supabase-js';
+
+const supabaseUrl = String(import.meta.env.VITE_SUPABASE_URL || '').trim();
+const supabaseKey = String(
+  import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY || import.meta.env.VITE_SUPABASE_ANON_KEY || '',
+).trim();
+
+export const isSupabaseConfigured = Boolean(supabaseUrl && supabaseKey);
+
+export const supabase = isSupabaseConfigured
+  ? createClient(supabaseUrl, supabaseKey, {
+      auth: {
+        persistSession: true,
+        autoRefreshToken: true,
+        detectSessionInUrl: true,
+      },
+    })
+  : null;
+
+export const supabaseFunctionsUrl = supabaseUrl
+  ? `${supabaseUrl.replace(/\/$/, '')}/functions/v1`
+  : '';
+
 export function generateSupabaseSQLSchema(): string {
-  return '-- RH-MIL 3.0 Firebase-only: esquema ativo em migrations/firestore.';
+  return '-- O schema ativo do RH TRANSFORMA é gerenciado pelas migrations do projeto Supabase.';
 }
