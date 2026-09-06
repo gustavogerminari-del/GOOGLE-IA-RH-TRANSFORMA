@@ -110,6 +110,8 @@ export const GoogleWorkspaceIntegrationCard: React.FC = () => {
     }
   };
 
+  const hideLegacyFeedback = Boolean(feedback && /\b(firebase|firestore)\b/i.test(feedback.message));
+
   return (
     <section className="bg-white rounded-2xl border border-slate-200 p-6 shadow-2xs space-y-5" aria-labelledby="google-workspace-title">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-slate-100">
@@ -131,7 +133,7 @@ export const GoogleWorkspaceIntegrationCard: React.FC = () => {
         </span>
       </div>
 
-      {feedback && (
+      {feedback && !hideLegacyFeedback && (
         <div role="status" className={`rounded-xl border p-3 text-xs font-semibold ${feedback.type === 'success' ? 'bg-emerald-50 border-emerald-200 text-emerald-800' : 'bg-rose-50 border-rose-200 text-rose-800'}`}>
           {feedback.message}
         </div>
