@@ -4,6 +4,22 @@ import { useAuth } from '../auth';
 import { getCompanyId, isMasterProfile } from '../auth/profile';
 import { GoogleWorkspaceIntegrationStatus, GoogleWorkspaceService } from '../services/GoogleWorkspaceService';
 
+const SESSION_EXPIRED_MESSAGE = 'Sua sessão no RH TRANSFORMA expirou. Entre novamente para continuar.';
+
+const isSessionRequiredError = (error: any): boolean => {
+  const code = String(error?.code || '');
+  const message = String(error?.message || '');
+  return code === 'RH_SESSION_REQUIRED' || /sess[aã]o\s+firebase\s+(obrigat[oó]ria|inv[aá]lida)/i.test(message);
+};
+
+const toUserFacingMessage = (message: unknown, fallback: string): string => {
+  const value = String(message || '').trim();
+  if (!value) return fallback;
+  if (/sess[aã]o.*firebase/i.test(value)) return SESSION_EXPIRED_MESSAGE;
+  if (/\b(firebase|firestore)\b/i.test(value)) return fallback;
+  return value;
+};
+
 export const GoogleWorkspaceIntegrationCard: React.FC = () => {
   const { user, hasActionAccess } = useAuth();
   const companyId = getCompanyId(user) || '';
@@ -24,7 +40,16 @@ export const GoogleWorkspaceIntegrationCard: React.FC = () => {
       setIntegration(result.integration);
       setConfiguration(result.configuration);
     } catch (error: any) {
-      setFeedback({ type: 'error', message: error?.message || 'Não foi possível consultar a integração Google.' });
+      // A ausência da antiga sessão técnica não deve poluir a tela de configurações.
+      // A integração continua sinalizada como pendente pelos estados próprios abaixo.
+      if (isSessionRequiredError(error)) {
+        setFeedback(null);
+      } else {
+        setFeedback({
+          type: 'error',
+          message: toUserFacingMessage(error?.message, 'Não foi possível consultar a integração Google.'),
+        });
+      }
     } finally {
       setLoading(false);
     }
@@ -39,7 +64,10 @@ export const GoogleWorkspaceIntegrationCard: React.FC = () => {
       setFeedback({ type: 'success', message: 'Conta Google Workspace conectada com sucesso.' });
       void loadStatus();
     } else if (status === 'error') {
-      setFeedback({ type: 'error', message: params.get('googleMessage') || 'Não foi possível conectar a conta Google.' });
+      setFeedback({
+        type: 'error',
+        message: toUserFacingMessage(params.get('googleMessage'), 'Não foi possível conectar a conta Google.'),
+      });
     }
   }, []);
 
@@ -71,7 +99,12 @@ export const GoogleWorkspaceIntegrationCard: React.FC = () => {
         setFeedback({ type: 'success', message: result.message });
       }
     } catch (error: any) {
-      setFeedback({ type: 'error', message: error?.message || 'Falha na integração Google.' });
+      setFeedback({
+        type: 'error',
+        message: isSessionRequiredError(error)
+          ? SESSION_EXPIRED_MESSAGE
+          : toUserFacingMessage(error?.message, 'Falha na integração Google.'),
+      });
     } finally {
       setActionLoading('');
     }
